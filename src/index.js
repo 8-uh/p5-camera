@@ -1,6 +1,5 @@
 import {Rectangle} from './Geometry'
 
-console.log('spler')
 
 let world,
     camera,
@@ -16,7 +15,7 @@ const WORLD_HEIGHT = 5000
 
 const screenspace = (camera, entity) => [~~(entity.x - camera.x), ~~(entity.y - camera.y)]
 
-console.log('there')
+
 
 
 
@@ -32,11 +31,8 @@ class Camera extends Rectangle {
   }
 }
 
-console.log('here')
-
 const sketch = p => {
   p.setup = function setup() {
-    console.log('setup')
     p.createCanvas(WIDTH, HEIGHT)
     world = new Rectangle(0,0, 10000, 5000)
     camera = new Camera(WIDTH, HEIGHT)
