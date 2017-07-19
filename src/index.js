@@ -34,9 +34,9 @@ class Camera extends Rectangle {
 const sketch = p => {
   p.setup = function setup() {
     p.createCanvas(WIDTH, HEIGHT)
-    world = new Rectangle(0,0, 10000, 5000)
+    world = new Rectangle(0,0, WORLD_WIDTH, WORLD_HEIGHT)
     camera = new Camera(WIDTH, HEIGHT)
-    player = p.createVector(WIDTH * 0.5, HEIGHT * 0.5)
+    player = p.createVector(0,0)
     entities = [...Array(1000).keys()].map(_ => p.createVector(p.random(WORLD_WIDTH), p.random(WORLD_HEIGHT))
     )
   }
@@ -80,15 +80,15 @@ const sketch = p => {
     }
   }
 
-  function drawPlayer() {
+  function drawPlayer(x, y) {
     p.fill('#EACA8F')
     p.noStroke()
-    p.ellipse(0,0,20,20)
+    p.ellipse(x,y,20,20)
   }
 
   function automatePlayer() {
-    player.x += ~~(p.random() * 3) + 2
-    player.y += ~~(p.random() * 3) + 2
+    player.x += 3
+    player.y += 2
     if(player.x >= WORLD_WIDTH) {
       player.x = 0
     }

@@ -1,9 +1,9 @@
 export class Rectangle {
-  constructor(x, y, width, height) {
+  constructor(x, y, w, h) {
     this._x = x
     this._y = y
-    this._width = width
-    this._height = height
+    this._width = w
+    this._height = h
     this.bounds = {}
     this.updateBounds()
   }
@@ -70,17 +70,21 @@ export class Rectangle {
 
   constrainTo(rect) {
     const {left, right, top, bottom} = this.bounds
-    const {left : rl, right : rr, top: rt, bottom: rb} = rect.bounds
+    const rbounds = rect.bounds
     if(this._width < rect.width && this._height < rect.height) {
-      if(left < rl) {
-        this._x = rl + this._width * 0.5
-      } else if(right > rr) {
-        this._x = rr - this._width * 0.5
+      if(left < rbounds.left) {
+        console.log('left < rbounds.left', left, rbounds.left)
+        this._x = rbounds.left + this._width * 0.5
+      } else if(right > rbounds.right) {
+        console.log('right > rbounds.right', right, rbounds.right)
+        this._x = rbounds.right - this._width * 0.5
       }
-      if(top < rt) {
-        this._y = rt + this._height * 0.5
-      } else if(bottom > rb) {
-        this._y = rb - this._height * 0.5
+      if(top < rbounds.top) {
+        console.log('top < rbounds.top', top, rbounds.top)
+        this._y = rbounds.top + this._height * 0.5
+      } else if(bottom > rbounds.bottom) {
+        console.log('bottom > rbounds.bottom', bottom, rbounds.bottom)
+        this._y = rbounds.bottom - this._height * 0.5
       }
       this.updateBounds()
     }
