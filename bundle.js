@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -10,19 +10,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Rectangle = exports.Rectangle = function () {
-  function Rectangle(x, y, width, height) {
+  function Rectangle(x, y, w, h) {
     _classCallCheck(this, Rectangle);
 
     this._x = x;
     this._y = y;
-    this._width = width;
-    this._height = height;
+    this._width = w;
+    this._height = h;
     this.bounds = {};
     this.updateBounds();
   }
 
   _createClass(Rectangle, [{
-    key: "updateBounds",
+    key: 'updateBounds',
     value: function updateBounds() {
       this.bounds.left = this._x - this._width * 0.5;
       this.bounds.right = this._x + this._width * 0.5;
@@ -30,7 +30,7 @@ var Rectangle = exports.Rectangle = function () {
       this.bounds.bottom = this._y + this._height * 0.5;
     }
   }, {
-    key: "contains",
+    key: 'contains',
     value: function contains(point) {
       var _bounds = this.bounds,
           top = _bounds.top,
@@ -44,7 +44,7 @@ var Rectangle = exports.Rectangle = function () {
       return tests;
     }
   }, {
-    key: "intersects",
+    key: 'intersects',
     value: function intersects(rect) {
       var _bounds2 = this.bounds,
           top = _bounds2.top,
@@ -61,35 +61,35 @@ var Rectangle = exports.Rectangle = function () {
       });
     }
   }, {
-    key: "constrainTo",
+    key: 'constrainTo',
     value: function constrainTo(rect) {
       var _bounds3 = this.bounds,
           left = _bounds3.left,
           right = _bounds3.right,
           top = _bounds3.top,
           bottom = _bounds3.bottom;
-      var _rect$bounds = rect.bounds,
-          rl = _rect$bounds.left,
-          rr = _rect$bounds.right,
-          rt = _rect$bounds.top,
-          rb = _rect$bounds.bottom;
 
+      var rbounds = rect.bounds;
       if (this._width < rect.width && this._height < rect.height) {
-        if (left < rl) {
-          this._x = rl + this._width * 0.5;
-        } else if (right > rr) {
-          this._x = rr - this._width * 0.5;
+        if (left < rbounds.left) {
+          console.log('left < rbounds.left', left, rbounds.left);
+          this._x = rbounds.left + this._width * 0.5;
+        } else if (right > rbounds.right) {
+          console.log('right > rbounds.right', right, rbounds.right);
+          this._x = rbounds.right - this._width * 0.5;
         }
-        if (top < rt) {
-          this._y = rt + this._height * 0.5;
-        } else if (bottom > rb) {
-          this._y = rb - this._height * 0.5;
+        if (top < rbounds.top) {
+          console.log('top < rbounds.top', top, rbounds.top);
+          this._y = rbounds.top + this._height * 0.5;
+        } else if (bottom > rbounds.bottom) {
+          console.log('bottom > rbounds.bottom', bottom, rbounds.bottom);
+          this._y = rbounds.bottom - this._height * 0.5;
         }
         this.updateBounds();
       }
     }
   }, {
-    key: "x",
+    key: 'x',
     get: function get() {
       return this._x;
     },
@@ -98,7 +98,7 @@ var Rectangle = exports.Rectangle = function () {
       this.updateBounds();
     }
   }, {
-    key: "y",
+    key: 'y',
     get: function get() {
       return this._y;
     },
@@ -107,7 +107,7 @@ var Rectangle = exports.Rectangle = function () {
       this.updateBounds();
     }
   }, {
-    key: "width",
+    key: 'width',
     get: function get() {
       return this._width;
     },
@@ -116,7 +116,7 @@ var Rectangle = exports.Rectangle = function () {
       this.updateBounds();
     }
   }, {
-    key: "height",
+    key: 'height',
     get: function get() {
       return this._height;
     },
@@ -188,9 +188,9 @@ var Camera = function (_Rectangle) {
 var sketch = function sketch(p) {
   p.setup = function setup() {
     p.createCanvas(WIDTH, HEIGHT);
-    world = new _Geometry.Rectangle(0, 0, 10000, 5000);
+    world = new _Geometry.Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     camera = new Camera(WIDTH, HEIGHT);
-    player = p.createVector(WIDTH * 0.5, HEIGHT * 0.5);
+    player = p.createVector(0, 0);
     entities = [].concat(_toConsumableArray(Array(1000).keys())).map(function (_) {
       return p.createVector(p.random(WORLD_WIDTH), p.random(WORLD_HEIGHT));
     });
@@ -244,15 +244,15 @@ var sketch = function sketch(p) {
     }
   }
 
-  function drawPlayer() {
+  function drawPlayer(x, y) {
     p.fill('#EACA8F');
     p.noStroke();
-    p.ellipse(0, 0, 20, 20);
+    p.ellipse(x, y, 20, 20);
   }
 
   function automatePlayer() {
-    player.x += ~~(p.random() * 3) + 2;
-    player.y += ~~(p.random() * 3) + 2;
+    player.x += 3;
+    player.y += 2;
     if (player.x >= WORLD_WIDTH) {
       player.x = 0;
     }
