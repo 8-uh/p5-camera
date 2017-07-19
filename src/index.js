@@ -6,10 +6,12 @@ let world,
     camera,
     player
 
-let entity
+let entities
 
 const WIDTH = 640
 const HEIGHT = 480
+const WORLD_WIDTH = 5000
+const WORLD_HEIGHT = 5000
 
 
 const screenspace = (camera, entity) => [~~(entity.x - camera.x), ~~(entity.y - camera.y)]
@@ -39,7 +41,8 @@ const sketch = p => {
     world = new Rectangle(0,0, 10000, 5000)
     camera = new Camera(WIDTH, HEIGHT)
     player = p.createVector(WIDTH * 0.5, HEIGHT * 0.5)
-    entity = p.createVector(WIDTH * 0.75, HEIGHT * 0.75)
+    entities = [...Array(1000).keys()].map(_ => p.createVector(p.random(WORLD_WIDTH), p.random(WORLD_HEIGHT))
+    )
   }
 
   p.draw = function draw() {
@@ -49,13 +52,12 @@ const sketch = p => {
     drawGrid(camera.x % 20, camera.y % 20)
     p.push()
       p.translate(camera.origin.x, camera.origin.y)
-
-      if(camera.contains(entity)) {
-        const [x,y] = screenspace(camera, entity)
-        console.log('x,y:', x, y)
-        drawEntity(x,y)
-
-      }
+      entities
+        .filter(e => camera.contains(e))
+        .forEach(e => {
+          const [x,y] = screenspace(camera, e)
+          drawEntity(x,y)
+        })
       const [px,py] = screenspace(camera, player)
       drawPlayer(px, py)
     p.pop()
@@ -89,8 +91,14 @@ const sketch = p => {
   }
 
   function automatePlayer() {
-    player.x += p.random()
-    player.y += p.random()
+    player.x += ~~(p.random() * 3) + 2
+    player.y += ~~(p.random() * 3) + 2
+    if(player.x >= WORLD_WIDTH) {
+      player.x = 0
+    }
+    if(player.y >= WORLD_HEIGHT) {
+      player.y = 0
+    }
   }
 }
 
