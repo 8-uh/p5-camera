@@ -138,28 +138,28 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _Geometry = require('./Geometry');
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-console.log('spler');
-
 var world = void 0,
     camera = void 0,
     player = void 0;
 
-var entity = void 0;
+var entities = void 0;
 
 var WIDTH = 640;
 var HEIGHT = 480;
+var WORLD_WIDTH = 5000;
+var WORLD_HEIGHT = 5000;
 
 var screenspace = function screenspace(camera, entity) {
   return [~~(entity.x - camera.x), ~~(entity.y - camera.y)];
 };
-
-console.log('there');
 
 var Camera = function (_Rectangle) {
   _inherits(Camera, _Rectangle);
@@ -185,16 +185,15 @@ var Camera = function (_Rectangle) {
   return Camera;
 }(_Geometry.Rectangle);
 
-console.log('here');
-
 var sketch = function sketch(p) {
   p.setup = function setup() {
-    console.log('setup');
     p.createCanvas(WIDTH, HEIGHT);
     world = new _Geometry.Rectangle(0, 0, 10000, 5000);
     camera = new Camera(WIDTH, HEIGHT);
     player = p.createVector(WIDTH * 0.5, HEIGHT * 0.5);
-    entity = p.createVector(WIDTH * 0.75, HEIGHT * 0.75);
+    entities = [].concat(_toConsumableArray(Array(1000).keys())).map(function (_) {
+      return p.createVector(p.random(WORLD_WIDTH), p.random(WORLD_HEIGHT));
+    });
   };
 
   p.draw = function draw() {
@@ -204,16 +203,16 @@ var sketch = function sketch(p) {
     drawGrid(camera.x % 20, camera.y % 20);
     p.push();
     p.translate(camera.origin.x, camera.origin.y);
-
-    if (camera.contains(entity)) {
-      var _screenspace = screenspace(camera, entity),
+    entities.filter(function (e) {
+      return camera.contains(e);
+    }).forEach(function (e) {
+      var _screenspace = screenspace(camera, e),
           _screenspace2 = _slicedToArray(_screenspace, 2),
           x = _screenspace2[0],
           y = _screenspace2[1];
 
-      console.log('x,y:', x, y);
       drawEntity(x, y);
-    }
+    });
 
     var _screenspace3 = screenspace(camera, player),
         _screenspace4 = _slicedToArray(_screenspace3, 2),
@@ -252,8 +251,14 @@ var sketch = function sketch(p) {
   }
 
   function automatePlayer() {
-    player.x += p.random();
-    player.y += p.random();
+    player.x += ~~(p.random() * 3) + 2;
+    player.y += ~~(p.random() * 3) + 2;
+    if (player.x >= WORLD_WIDTH) {
+      player.x = 0;
+    }
+    if (player.y >= WORLD_HEIGHT) {
+      player.y = 0;
+    }
   }
 };
 
